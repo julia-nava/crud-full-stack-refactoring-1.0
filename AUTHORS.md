@@ -17,7 +17,10 @@ This project is an educational prototype of a CRUD (Create Read Update and Delet
 
 * Estudiantes de Tecnologías B - Mar del Plata (Argentina)
 
-    * Many intelligent people.
+    * Emiliano Lobaccaro (validacion 1)
+    * Agustin Simonte (validacion 2)
+    * Julia Nava (validacion 3)
+    * Guillermo Ercolano (validacion 4) 
 
 
 ## Special thanks to
