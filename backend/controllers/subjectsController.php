@@ -10,6 +10,7 @@
 */
 
 require_once("./repositories/subjects.php");
+require_once("./repositories/studentsSubjects.php");
 
 function handleGet($conn) 
 {
@@ -62,6 +63,8 @@ function handlePut($conn)
 function handleDelete($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
+
+    //if (getStudentsBySubject($conn, $subject_id)  )
     
     $result = deleteSubject($conn, $input['id']);
     if ($result['deleted'] > 0) 
