@@ -149,7 +149,7 @@ async function confirmDelete(id)
         let customMessage = 'Ocurrió un error';
 
         if (err.message.includes('DELETE')) {
-            customMessage = 'No se pudo eliminar el estudiante. Verifica que no tenga estudiantes asociados.';
+            customMessage = 'No se pudo eliminar el estudiante. Verifica que no tenga materias asociadas.';
         }
 
         alert(customMessage);
