@@ -146,7 +146,13 @@ async function confirmDelete(id)
     } 
     catch (err) 
     {
-        console.error('Error al borrar:', err.message);
+        let customMessage = 'Ocurrió un error';
+
+        if (err.message.includes('DELETE')) {
+            customMessage = 'No se pudo eliminar el estudiante. Verifica que no tenga estudiantes asociados.';
+        }
+
+        alert(customMessage);
     }
 }
   
