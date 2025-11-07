@@ -130,6 +130,13 @@ async function confirmDeleteSubject(id)
     }
     catch (err)
     {
-        console.error('Error al borrar materia:', err.message);
+        console.error("No se pudo eliminar la materia",err.message);
+        let customMessage = 'Ocurrió un error';
+
+        if (err.message.includes('DELETE')) {
+            customMessage = 'No se pudo eliminar la materia. Verifica que no tenga estudiantes asociados.';
+        }
+
+        alert(customMessage);
     }
 }
