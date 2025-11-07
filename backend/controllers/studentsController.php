@@ -10,6 +10,7 @@
 */
 
 require_once("./repositories/students.php");
+require_once("./repositories/studentsSubjects.php");
 
 function handleGet($conn) 
 {
@@ -26,6 +27,7 @@ function handleGet($conn)
         echo json_encode($students);
     }
 }
+
 
 function handlePost($conn) 
 {
@@ -59,19 +61,27 @@ function handlePut($conn)
     }
 }
 
+
 function handleDelete($conn) 
 {
     $input = json_decode(file_get_contents("php://input"), true);
 
-    $result = deleteStudent($conn, $input['id']);
-    if ($result['deleted'] > 0) 
-    {
-        echo json_encode(["message" => "Eliminado correctamente"]);
-    } 
-    else 
-    {
-        http_response_code(500);
-        echo json_encode(["error" => "No se pudo eliminar"]);
+    $result = getSubjectsByStudent($conn, $input['id']);
+    $cantidad = count($result); 
+
+    if ($cantidad > 0) {
+        http_response_code(409);
+        echo json_encode(["error" => "El usuario tiene materias"]);
+    } else {
+        $result = deleteStudent($conn, $input['id']);
+        if ($result['deleted'] > 0) {
+            http_response_code(200);
+            echo json_encode(["message" => "Eliminado correctamente"]);
+        } else {
+            http_response_code(500);
+            echo json_encode(["error" => "No se pudo eliminar"]);
+        }
     }
 }
+
 ?>
