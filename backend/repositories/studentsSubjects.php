@@ -54,6 +54,21 @@ function getSubjectsByStudent($conn, $student_id)
     return $result->fetch_all(MYSQLI_ASSOC); 
 }
 
+function getStudentsBySubject($conn, $subject_id) //nueva funcion 
+{
+    $sql = "SELECT ss.subject_id
+        FROM students_subjects ss
+        JOIN students s ON ss.student_id = s.id
+        WHERE ss.subject_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $subject_id);
+    $stmt->execute();
+    $result= $stmt->get_result();
+
+    return $result->fetch_all(MYSQLI_ASSOC); 
+}
+
+
 function updateStudentSubject($conn, $id, $student_id, $subject_id, $approved) 
 {
     $sql = "UPDATE students_subjects 
