@@ -8,6 +8,7 @@
 *    Iteration   : 3.0 ( prototype )
 */
 
+
 import { studentsAPI } from '../api/studentsAPI.js';
 
 document.addEventListener('DOMContentLoaded', () => 
@@ -34,13 +35,30 @@ function setupFormHandler()
             else 
             {
                 await studentsAPI.create(student);
+                const msgBox = document.getElementById("msgBox"); // mensaje de validacion
+                msgBox.classList.add("w3-green"); // agregamos verde para verificar creacion
+                msgBox.innerHTML = `<b>Estudiante creado correctamente.</b>`; // texto
+                msgBox.classList.remove("w3-hide"); // Mostrar
+
+                setTimeout(() => msgBox.classList.add("w3-hide"), 4000);
             }
             clearForm();
             loadStudents();
         }
         catch (err)
         {
-            console.error(err.message);
+            console.error("Error al crear al estudiante: ", err.message);
+            let errorMessage = "Error al crear al estudiante."
+            if (err.message.includes("POST")){
+                errorMessage = "Error en carga de datos. Revisalos nuevamente"
+            }
+            const msgBox = document.getElementById("msgBox");
+            msgBox.classList.add("w3-red"); // agregamos rojo para remarcar error
+            msgBox.innerHTML = `<b>Error:</b> ${errorMessage}`; // texto
+            msgBox.classList.remove("w3-hide");
+
+            setTimeout(() => msgBox.classList.add("w3-hide"), 4000);
+            // luego de unos segundos, se agrega la clase para ocultar el mensaje de error, para que desaparezca
         }
     });
 }
