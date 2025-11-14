@@ -10,76 +10,72 @@
 
 import { subjectsAPI } from '../api/subjectsAPI.js';
 
-document.addEventListener('DOMContentLoaded', () => 
-{
+document.addEventListener('DOMContentLoaded', () => {
     loadSubjects();
     setupSubjectFormHandler();
     setupCancelHandler();
 });
 
-function setupSubjectFormHandler() 
-{
-  const form = document.getElementById('subjectForm');
-  form.addEventListener('submit', async e => 
-  {
+function setupSubjectFormHandler() {
+    const form = document.getElementById('subjectForm');
+    form.addEventListener('submit', async e => {
         e.preventDefault();
-        const subject = 
+        const subject =
         {
             id: document.getElementById('subjectId').value.trim(),
             name: document.getElementById('name').value.trim()
         };
 
-        try 
-        {
-            if (subject.id) 
-            {
+        try {
+            if (subject.id) {
                 await subjectsAPI.update(subject);
             }
-            else
-            {
+            else {
+                const subjects = await subjectsAPI.fetchAll();
+                const exists = subjects.some(s =>
+                    s.name.toLowerCase() === subject.name.toLowerCase()
+                );
+
+                if (exists) {
+                    alert("La materia ya existe");
+                    return; // ✔ evita el POST
+                }
                 await subjectsAPI.create(subject);
             }
-            
+
             form.reset();
             document.getElementById('subjectId').value = '';
             loadSubjects();
         }
-        catch (err)
-        {
+        catch (err) {
+            alert(err.message);
             console.error(err.message);
         }
-  });
+    });
 }
 
-function setupCancelHandler()
-{
+function setupCancelHandler() {
     const cancelBtn = document.getElementById('cancelBtn');
-    cancelBtn.addEventListener('click', () => 
-    {
+    cancelBtn.addEventListener('click', () => {
         document.getElementById('subjectId').value = '';
     });
 }
 
-async function loadSubjects()
-{
-    try
-    {
+async function loadSubjects() {
+    try {
         const subjects = await subjectsAPI.fetchAll();
         renderSubjectTable(subjects);
     }
-    catch (err)
-    {
+    catch (err) {
         console.error('Error cargando materias:', err.message);
     }
 }
 
-function renderSubjectTable(subjects)
-{
+function renderSubjectTable(subjects) {
     const tbody = document.getElementById('subjectTableBody');
     tbody.replaceChildren();
 
-    subjects.forEach(subject =>
-    {
+    subjects.forEach(subject => {
         const tr = document.createElement('tr');
 
         tr.appendChild(createCell(subject.name));
@@ -89,22 +85,19 @@ function renderSubjectTable(subjects)
     });
 }
 
-function createCell(text)
-{
+function createCell(text) {
     const td = document.createElement('td');
     td.textContent = text;
     return td;
 }
 
-function createSubjectActionsCell(subject)
-{
+function createSubjectActionsCell(subject) {
     const td = document.createElement('td');
 
     const editBtn = document.createElement('button');
     editBtn.textContent = 'Editar';
     editBtn.className = 'w3-button w3-blue w3-small';
-    editBtn.addEventListener('click', () => 
-    {
+    editBtn.addEventListener('click', () => {
         document.getElementById('subjectId').value = subject.id;
         document.getElementById('name').value = subject.name;
     });
@@ -119,18 +112,15 @@ function createSubjectActionsCell(subject)
     return td;
 }
 
-async function confirmDeleteSubject(id)
-{
+async function confirmDeleteSubject(id) {
     if (!confirm('¿Seguro que deseas borrar esta materia?')) return;
 
-    try
-    {
+    try {
         await subjectsAPI.remove(id);
         loadSubjects();
     }
-    catch (err)
-    {
-        console.error("No se pudo eliminar la materia",err.message);
+    catch (err) {
+        console.error("No se pudo eliminar la materia", err.message);
         let customMessage = 'Ocurrió un error';
 
         if (err.message.includes('DELETE')) {

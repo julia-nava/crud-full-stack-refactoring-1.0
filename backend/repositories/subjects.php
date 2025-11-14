@@ -27,6 +27,17 @@ function getSubjectById($conn, $id)
     return $result->fetch_assoc(); 
 }
 
+function subjectExists($conn, $name) 
+{
+    $sql = "SELECT id FROM subjects WHERE name = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $name);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    return $result->num_rows > 0;
+}
+
 function createSubject($conn, $name) 
 {
     $sql = "INSERT INTO subjects (name) VALUES (?)";
