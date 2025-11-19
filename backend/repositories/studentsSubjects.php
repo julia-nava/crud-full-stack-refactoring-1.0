@@ -56,7 +56,7 @@ function getSubjectsByStudent($conn, $student_id)
 
 function getStudentsBySubject($conn, $subject_id) //nueva funcion 
 {
-    $sql = "SELECT ss.subject_id
+    $sql = "SELECT ss.student_id
         FROM students_subjects ss
         JOIN students s ON ss.student_id = s.id
         WHERE ss.subject_id = ?";
